@@ -17,6 +17,8 @@ namespace Task2Web.Models
         public DbSet<Flat> Flats { get; set; }
         public DbSet<Resident> Residents { get; set; }
 
+        public DbSet<LoginModel> LoginModels { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Flat>()
@@ -28,6 +30,14 @@ namespace Task2Web.Models
            .HasOne(p => p.Flat)
            .WithMany(t => t.Residents)
            .HasForeignKey(p => p.FlatId);
+
+            modelBuilder.Entity<LoginModel>().HasData(new LoginModel
+            {
+                Id = 1,
+                UserName = "andrey",
+                Password = "1234"
+
+            });
 
         }
     }

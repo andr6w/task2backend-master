@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Task2Web.Models;
@@ -38,6 +41,7 @@ namespace Task2Web
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
 
             });
+
             services.AddControllers()
             .AddNewtonsoftJson(options =>
             {
@@ -54,6 +58,32 @@ namespace Task2Web
 
             services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer("Server=localhost;Database=HouseDB;Trusted_Connection=True; MultipleActiveResultSets=True;"));
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(options =>
+           {
+                //token is going to be vallid if -->
+                options.TokenValidationParameters = new TokenValidationParameters
+               {
+                    // issuer is the actual server that created a token
+                    ValidateIssuer = true,
+                    // receiver of token
+                    ValidateAudience = true,
+                    //Validation not expired 
+                    ValidateLifetime = true,
+                    // signed key is valid and trusted!
+                    ValidateIssuerSigningKey = true,
+
+                   ValidIssuer = "http://localhost:50271/",
+                   ValidAudience = "http://localhost:50271/",
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+               };
+           });
+
 
             services.AddCors();
         }
@@ -73,6 +103,8 @@ namespace Task2Web
 
             app.UseRouting();
 
+            // using method for auth...
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
