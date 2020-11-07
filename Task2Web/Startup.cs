@@ -58,6 +58,7 @@ namespace Task2Web
 
             services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer("Server=localhost;Database=HouseDB;Trusted_Connection=True; MultipleActiveResultSets=True;"));
+           
 
             services.AddAuthentication(opt =>
             {

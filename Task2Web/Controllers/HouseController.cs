@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Task2Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Task2Web.Controllers
 {
@@ -21,7 +22,7 @@ namespace Task2Web.Controllers
         }
 
         // GET: api/House
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Manager")]
         public async Task<ActionResult<IEnumerable<House>>> GetHouses()
         {
             return await _context.Houses.ToListAsync();

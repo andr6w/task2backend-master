@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Frameworks;
 using SQLitePCL;
 using Task2Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Task2Web.Controllers
 {
@@ -47,8 +48,7 @@ namespace Task2Web.Controllers
             if (flat == null)
             {
                 return NotFound();
-            }
-
+            }           
             return flat;
         }
 
@@ -72,7 +72,7 @@ namespace Task2Web.Controllers
                 return House.Flats;
             }
 
-           
+          
         }
 
         // PUT: api/Flat/5
